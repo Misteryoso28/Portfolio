@@ -48,7 +48,7 @@ const revealObserver = new IntersectionObserver(
 
 revealItems.forEach((item) => revealObserver.observe(item));
 
-// Contact form submission handler with silent submission
+// Contact form submission handler
 const contactForm = document.getElementById('contactForm');
 if (contactForm) {
   contactForm.addEventListener('submit', async (event) => {
@@ -60,7 +60,6 @@ if (contactForm) {
       const originalText = submitButton.textContent;
       submitButton.textContent = 'Sending...';
       submitButton.disabled = true;
-      submitButton.setAttribute('aria-busy', true);
 
       try {
         // Send form data to Formspree
@@ -73,51 +72,17 @@ if (contactForm) {
         });
 
         if (response.ok) {
-          // Show success notification
-          showNotification('Message sent successfully!', 'success');
+          alert('Message sent successfully!');
           contactForm.reset();
-          submitButton.textContent = 'Message Sent';
-          
-          // Reset button after 2 seconds
-          setTimeout(() => {
-            submitButton.textContent = originalText;
-            submitButton.disabled = false;
-            submitButton.removeAttribute('aria-busy');
-          }, 2000);
         } else {
-          showNotification('Something went wrong. Please try again.', 'error');
-          submitButton.textContent = originalText;
-          submitButton.disabled = false;
-          submitButton.removeAttribute('aria-busy');
+          alert('Something went wrong. Please try again.');
         }
       } catch (error) {
-        showNotification('Error sending message. Please try again.', 'error');
-        submitButton.textContent = originalText;
-        submitButton.disabled = false;
-        submitButton.removeAttribute('aria-busy');
+        alert('Error sending message. Please try again.');
       }
+
+      submitButton.textContent = originalText;
+      submitButton.disabled = false;
     }
   });
-}
-
-// Notification function
-function showNotification(message, type = 'success') {
-  const notification = document.createElement('div');
-  notification.className = `notification notification-${type}`;
-  notification.setAttribute('role', 'alert');
-  notification.textContent = message;
-  document.body.appendChild(notification);
-
-  // Trigger animation
-  setTimeout(() => {
-    notification.classList.add('show');
-  }, 10);
-
-  // Remove after 4 seconds
-  setTimeout(() => {
-    notification.classList.remove('show');
-    setTimeout(() => {
-      notification.remove();
-    }, 300);
-  }, 4000);
 }
