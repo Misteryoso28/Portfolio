@@ -49,40 +49,16 @@ const revealObserver = new IntersectionObserver(
 revealItems.forEach((item) => revealObserver.observe(item));
 
 // Contact form submission handler
-const contactForm = document.getElementById('contactForm');
+const contactForm = document.querySelector('.contact-form');
 if (contactForm) {
-  contactForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
+  contactForm.addEventListener('submit', (event) => {
     const submitButton = contactForm.querySelector('button[type="submit"]');
-    const formData = new FormData(contactForm);
 
     if (submitButton) {
       const originalText = submitButton.textContent;
       submitButton.textContent = 'Sending...';
       submitButton.disabled = true;
-
-      try {
-        // Send form data to Formspree
-        const response = await fetch('https://formspree.io/f/xppzwnrg', {
-          method: 'POST',
-          body: formData,
-          headers: {
-            'Accept': 'application/json'
-          }
-        });
-
-        if (response.ok) {
-          alert('Message sent successfully!');
-          contactForm.reset();
-        } else {
-          alert('Something went wrong. Please try again.');
-        }
-      } catch (error) {
-        alert('Error sending message. Please try again.');
-      }
-
-      submitButton.textContent = originalText;
-      submitButton.disabled = false;
+      submitButton.setAttribute('aria-busy', true);
     }
   });
 }
