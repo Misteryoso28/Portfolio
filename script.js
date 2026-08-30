@@ -52,21 +52,27 @@ revealItems.forEach((item) => revealObserver.observe(item));
 const contactForm = document.querySelector('.contact-form');
 if (contactForm) {
   contactForm.addEventListener('submit', (event) => {
-    event.preventDefault();
     const submitButton = contactForm.querySelector('button[type="submit"]');
 
     if (submitButton) {
       const originalText = submitButton.textContent;
-      submitButton.textContent = 'Message Sent';
+      submitButton.textContent = 'Sending...';
       submitButton.disabled = true;
       submitButton.setAttribute('aria-busy', true);
 
+      // Let Formspree handle the submission
+      // After form submits, show feedback
+      setTimeout(() => {
+        submitButton.textContent = 'Message Sent';
+      }, 1000);
+
+      // Reset form after 3 seconds
       setTimeout(() => {
         submitButton.textContent = originalText;
         submitButton.disabled = false;
         submitButton.removeAttribute('aria-busy');
         contactForm.reset();
-      }, 2000);
+      }, 3000);
     }
   });
 }

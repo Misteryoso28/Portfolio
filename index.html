@@ -443,18 +443,18 @@
               </div>
             </div>
 
-            <form class="contact-form glass-card">
+            <form class="contact-form glass-card" action="https://formspree.io/f/xppzwnrg" method="POST">
               <div class="field-group">
                 <label for="name">Your Name</label>
-                <input id="name" type="text" placeholder="Your Name" />
+                <input id="name" name="name" type="text" placeholder="Your Name" required />
               </div>
               <div class="field-group">
                 <label for="email">Email Address</label>
-                <input id="email" type="email" placeholder="you@example.com" />
+                <input id="email" name="email" type="email" placeholder="you@example.com" required />
               </div>
               <div class="field-group">
                 <label for="message">Message</label>
-                <textarea id="message" rows="5" placeholder="Tell me about your project..."></textarea>
+                <textarea id="message" name="message" rows="5" placeholder="Tell me about your project..." required></textarea>
               </div>
               <button type="submit" class="btn btn-primary full">Send Message</button>
             </form>
