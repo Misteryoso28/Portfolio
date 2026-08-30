@@ -48,11 +48,13 @@ const revealObserver = new IntersectionObserver(
 
 revealItems.forEach((item) => revealObserver.observe(item));
 
-// Contact form submission handler
-const contactForm = document.querySelector('.contact-form');
+// Contact form submission handler with silent submission
+const contactForm = document.getElementById('contactForm');
 if (contactForm) {
-  contactForm.addEventListener('submit', (event) => {
+  contactForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
     const submitButton = contactForm.querySelector('button[type="submit"]');
+    const formData = new FormData(contactForm);
 
     if (submitButton) {
       const originalText = submitButton.textContent;
@@ -60,19 +62,62 @@ if (contactForm) {
       submitButton.disabled = true;
       submitButton.setAttribute('aria-busy', true);
 
-      // Let Formspree handle the submission
-      // After form submits, show feedback
-      setTimeout(() => {
-        submitButton.textContent = 'Message Sent';
-      }, 1000);
+      try {
+        // Send form data to Formspree
+        const response = await fetch('https://formspree.io/f/xppzwnrg', {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
 
-      // Reset form after 3 seconds
-      setTimeout(() => {
+        if (response.ok) {
+          // Show success notification
+          showNotification('Message sent successfully!', 'success');
+          contactForm.reset();
+          submitButton.textContent = 'Message Sent';
+          
+          // Reset button after 2 seconds
+          setTimeout(() => {
+            submitButton.textContent = originalText;
+            submitButton.disabled = false;
+            submitButton.removeAttribute('aria-busy');
+          }, 2000);
+        } else {
+          showNotification('Something went wrong. Please try again.', 'error');
+          submitButton.textContent = originalText;
+          submitButton.disabled = false;
+          submitButton.removeAttribute('aria-busy');
+        }
+      } catch (error) {
+        showNotification('Error sending message. Please try again.', 'error');
         submitButton.textContent = originalText;
         submitButton.disabled = false;
         submitButton.removeAttribute('aria-busy');
-        contactForm.reset();
-      }, 3000);
+      }
     }
   });
+}
+
+// Notification function
+function showNotification(message, type = 'success') {
+  const notification = document.createElement('div');
+  notification.className = `notification notification-${type}`;
+  notification.setAttribute('role', 'alert');
+  notification.textContent = message;
+  document.body.appendChild(notification);
+
+  // Trigger animation
+  setTimeout(() => {
+    notification.classList.add('show');
+  }, 10);
+
+  // Remove after 4 seconds
+  setTimeout(() => {
+    notification.classList.remove('show');
+    setTimeout(() => {
+      notification.remove();
+    }, 300);
+  }, 4000);
 }
