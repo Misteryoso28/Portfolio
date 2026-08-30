@@ -1,21 +1,38 @@
+// Set current year in footer
 const yearEl = document.getElementById('year');
 if (yearEl) {
   yearEl.textContent = new Date().getFullYear();
 }
 
+// Mobile navigation toggle with accessibility
 const toggle = document.querySelector('.nav-toggle');
 const navLinks = document.querySelector('.nav-links');
 
 if (toggle && navLinks) {
+  // Toggle menu on button click
   toggle.addEventListener('click', () => {
-    navLinks.classList.toggle('open');
+    const isOpen = navLinks.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', isOpen);
   });
 
+  // Close menu when navigation link is clicked
   navLinks.querySelectorAll('a').forEach((link) => {
-    link.addEventListener('click', () => navLinks.classList.remove('open'));
+    link.addEventListener('click', () => {
+      navLinks.classList.remove('open');
+      toggle.setAttribute('aria-expanded', false);
+    });
+  });
+
+  // Close menu when ESC key is pressed
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && navLinks.classList.contains('open')) {
+      navLinks.classList.remove('open');
+      toggle.setAttribute('aria-expanded', false);
+    }
   });
 }
 
+// Lazy load observer for scroll-triggered reveal animations
 const revealItems = document.querySelectorAll('.reveal');
 const revealObserver = new IntersectionObserver(
   (entries) => {
@@ -31,6 +48,7 @@ const revealObserver = new IntersectionObserver(
 
 revealItems.forEach((item) => revealObserver.observe(item));
 
+// Contact form submission handler
 const contactForm = document.querySelector('.contact-form');
 if (contactForm) {
   contactForm.addEventListener('submit', (event) => {
@@ -41,10 +59,12 @@ if (contactForm) {
       const originalText = submitButton.textContent;
       submitButton.textContent = 'Message Sent';
       submitButton.disabled = true;
+      submitButton.setAttribute('aria-busy', true);
 
       setTimeout(() => {
         submitButton.textContent = originalText;
         submitButton.disabled = false;
+        submitButton.removeAttribute('aria-busy');
         contactForm.reset();
       }, 2000);
     }
