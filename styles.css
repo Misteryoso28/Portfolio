@@ -104,6 +104,14 @@ textarea {
   box-shadow: 0 12px 30px rgba(124, 58, 237, 0.4);
 }
 
+.brand-image {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 12px 30px rgba(124, 58, 237, 0.4);
+}
+
 .nav-links {
   display: flex;
   align-items: center;
