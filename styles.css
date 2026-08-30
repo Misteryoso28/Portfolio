@@ -183,6 +183,14 @@ textarea {
   text-transform: uppercase;
   color: #8ec5ff;
   font-size: 0.74rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.eyebrow i {
+  font-size: 0.9rem;
+  color: var(--secondary);
 }
 
 .hero-copy h1 {
